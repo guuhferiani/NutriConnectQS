@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --primary: 142.1 76.2% 36.3%;
+    --primary-foreground: 355.7 100% 97.3%;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  }
+}
+
+/* Glassmorphism card subtle styles */
+.glass-card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 20px 40px -15px rgba(16, 185, 129, 0.08), 0 0 1px 1px rgba(0, 0, 0, 0.03);
+}
+
+.gradient-mesh {
+  background-color: #f0fdf4;
+  background-image: 
+    radial-gradient(at 0% 0%, hsla(142, 70%, 93%, 1) 0, transparent 50%), 
+    radial-gradient(at 100% 0%, hsla(160, 60%, 90%, 1) 0, transparent 50%),
+    radial-gradient(at 50% 100%, hsla(142, 60%, 96%, 1) 0, transparent 50%);
+}
