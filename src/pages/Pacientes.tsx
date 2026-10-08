@@ -9,7 +9,6 @@ import {
   Search,
   Plus,
   Phone,
-  Mail,
   ChevronRight,
   UserCheck,
   RefreshCw,
@@ -70,10 +69,12 @@ export const Pacientes: React.FC = () => {
             <RefreshCw className={`w-4 h-4 mr-1.5 ${isLoading ? 'animate-spin' : ''}`} />
             Atualizar
           </Button>
-          <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm">
-            <Plus className="w-4 h-4 mr-1.5" />
-            Novo Paciente
-          </Button>
+          <Link to="/pacientes/novo">
+            <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm">
+              <Plus className="w-4 h-4 mr-1.5" />
+              Novo Paciente
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -111,55 +112,76 @@ export const Pacientes: React.FC = () => {
               : 'Comece cadastrando seu primeiro paciente para acompanhar consultas, anamnese e planos alimentares.'}
           </p>
           {!searchQuery && (
-            <Button className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm">
-              <Plus className="w-4 h-4 mr-1.5" />
-              Cadastrar Primeiro Paciente
-            </Button>
+            <Link to="/pacientes/novo">
+              <Button className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm">
+                <Plus className="w-4 h-4 mr-1.5" />
+                Cadastrar Primeiro Paciente
+              </Button>
+            </Link>
           )}
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredPacientes.map((paciente) => (
-            <Link
-              key={paciente.id}
-              to={`/pacientes/${paciente.id}`}
-              className="group block bg-white border border-slate-200/90 rounded-2xl p-5 hover:shadow-md hover:border-emerald-300 transition-all duration-200 hover:-translate-y-0.5"
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-base border border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-                    {paciente.nome.charAt(0).toUpperCase()}
+          {filteredPacientes.map((paciente) => {
+            const objetivoExibicao =
+              paciente.objetivo_texto ||
+              (Array.isArray(paciente.objetivos) && paciente.objetivos.length > 0
+                ? paciente.objetivos.join(', ')
+                : 'Não informado');
+
+            return (
+              <Link
+                key={paciente.id}
+                to={`/pacientes/${paciente.id}`}
+                className="group block bg-white border border-slate-200/90 rounded-2xl p-5 hover:shadow-md hover:border-emerald-300 transition-all duration-200 hover:-translate-y-0.5"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-base border border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                      {paciente.nome.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">
+                        {paciente.nome}
+                      </h3>
+                      <span className="text-xs text-slate-400">
+                        Cadastrado em {new Date(paciente.created_at).toLocaleDateString('pt-BR')}
+                      </span>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">
-                      {paciente.nome}
-                    </h3>
-                    <span className="text-xs text-slate-400">
-                      Cadastrado em {new Date(paciente.created_at).toLocaleDateString('pt-BR')}
+                  <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition-all" />
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-slate-100 space-y-1.5 text-xs text-slate-600">
+                  <div className="flex items-center justify-between text-slate-700">
+                    <span className="font-semibold text-slate-500">Objetivo:</span>
+                    <span className="font-medium text-emerald-700 max-w-[170px] truncate text-right">
+                      {objetivoExibicao}
                     </span>
                   </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition-all" />
-              </div>
 
-              <div className="mt-4 pt-3 border-t border-slate-100 space-y-1.5 text-xs text-slate-600">
-                {paciente.whatsapp && (
-                  <div className="flex items-center gap-2">
-                    <Phone className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>{paciente.whatsapp}</span>
+                  <div className="flex items-center justify-between text-slate-700">
+                    <span className="font-semibold text-slate-500">Última consulta:</span>
+                    <span className="text-slate-600">
+                      {paciente.ultima_consulta
+                        ? new Date(paciente.ultima_consulta).toLocaleDateString('pt-BR')
+                        : 'Nenhuma consulta'}
+                    </span>
                   </div>
-                )}
-                {paciente.email && (
-                  <div className="flex items-center gap-2 truncate">
-                    <Mail className="w-3.5 h-3.5 text-teal-600" />
-                    <span className="truncate">{paciente.email}</span>
-                  </div>
-                )}
-              </div>
-            </Link>
-          ))}
+
+                  {paciente.whatsapp && (
+                    <div className="flex items-center gap-2 pt-1 text-slate-500">
+                      <Phone className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>{paciente.whatsapp}</span>
+                    </div>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
         </div>
       )}
+
     </div>
   );
 };

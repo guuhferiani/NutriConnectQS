@@ -7,6 +7,7 @@ import { Login } from '@/pages/Login';
 import { Register } from '@/pages/Register';
 import { Dashboard } from '@/pages/Dashboard';
 import { Pacientes } from '@/pages/Pacientes';
+import { PacienteNovo } from '@/pages/PacienteNovo';
 import { PacientePerfil } from '@/pages/PacientePerfil';
 
 export function App() {
@@ -25,6 +26,7 @@ export function App() {
             <Route element={<AppLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/pacientes" element={<Pacientes />} />
+              <Route path="/pacientes/novo" element={<PacienteNovo />} />
               <Route path="/pacientes/:id" element={<PacientePerfil />} />
             </Route>
           </Route>

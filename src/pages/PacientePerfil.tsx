@@ -1,9 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { getPacienteById } from '@/lib/db';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
+import {
+  getPacienteById,
+  atualizarPaciente,
+  getConsultasByPaciente,
+  criarConsulta,
+  AtualizarPacienteData,
+  ConsultaItem,
+  NovaConsultaData,
+} from '@/lib/db';
+import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { PacienteDadosEditSection } from '@/components/PacienteDadosEditSection';
+import { ConsultasSection } from '@/components/ConsultasSection';
+import { PlanoAlimentarSection } from '@/components/PlanoAlimentarSection';
 import {
   ArrowLeft,
   Phone,
@@ -11,38 +22,80 @@ import {
   Weight,
   Ruler,
   AlertCircle,
-  Activity,
-  HeartPulse,
+  Calendar,
+  Utensils,
+  UserCheck,
 } from 'lucide-react';
 
 export const PacientePerfil: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const navigate = useNavigate();
+
   const [paciente, setPaciente] = useState<any>(null);
+  const [consultas, setConsultas] = useState<ConsultaItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingConsultas, setIsLoadingConsultas] = useState(true);
+
+  // Controle de seção ativa no perfil: 'dados' | 'consultas' | 'planos'
+  const [activeMainSection, setActiveMainSection] = useState<'dados' | 'consultas' | 'planos'>('dados');
+
+  const loadPaciente = useCallback(async () => {
+    if (!id || !user?.id) return;
+    try {
+      const data = await getPacienteById(id, user.id);
+      setPaciente(data);
+    } catch (err) {
+      console.error('Erro ao buscar dados do paciente:', err);
+    }
+  }, [id, user?.id]);
+
+  const loadConsultas = useCallback(async () => {
+    if (!id) return;
+    setIsLoadingConsultas(true);
+    try {
+      const data = await getConsultasByPaciente(id);
+      setConsultas(data);
+    } catch (err) {
+      console.error('Erro ao buscar consultas:', err);
+    } finally {
+      setIsLoadingConsultas(false);
+    }
+  }, [id]);
 
   useEffect(() => {
-    async function load() {
-      if (!id || !user?.id) return;
+    async function loadAll() {
       setIsLoading(true);
-      try {
-        const data = await getPacienteById(id, user.id);
-        setPaciente(data);
-      } catch (err) {
-        console.error('Erro ao buscar dados do paciente:', err);
-      } finally {
-        setIsLoading(false);
-      }
+      await Promise.all([loadPaciente(), loadConsultas()]);
+      setIsLoading(false);
     }
-    load();
-  }, [id, user?.id]);
+    loadAll();
+  }, [loadPaciente, loadConsultas]);
+
+  // Handler de atualização de dados do paciente
+  const handleSalvarDadosPaciente = async (novosDados: AtualizarPacienteData) => {
+    if (!id || !user?.id) return { success: false, error: 'Usuário não autenticado' };
+    const res = await atualizarPaciente(id, user.id, novosDados);
+    if (res.success) {
+      await loadPaciente();
+    }
+    return res;
+  };
+
+  // Handler de registro de nova consulta
+  const handleSalvarNovaConsulta = async (novaConsulta: NovaConsultaData) => {
+    const res = await criarConsulta(novaConsulta);
+    if (res.success) {
+      await loadConsultas();
+    }
+    return res;
+  };
 
   if (isLoading) {
     return (
       <div className="max-w-4xl mx-auto py-12 text-center text-slate-500">
         <div className="inline-block w-8 h-8 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mb-4" />
-        <p>Carregando perfil do paciente...</p>
+        <p>Carregando prontuário do paciente...</p>
       </div>
     );
   }
@@ -57,43 +110,43 @@ export const PacientePerfil: React.FC = () => {
         <p className="text-sm text-slate-500 mt-1 mb-6">
           O paciente solicitado não existe ou você não tem permissão para visualizá-lo.
         </p>
-        <Button onClick={() => navigate('/dashboard')} variant="outline">
+        <Button onClick={() => navigate('/pacientes')} variant="outline">
           <ArrowLeft className="w-4 h-4 mr-1.5" />
-          Voltar ao Dashboard
+          Voltar para Lista de Pacientes
         </Button>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-6 pb-12">
       {/* Botão Voltar */}
       <div className="flex items-center justify-between">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate('/pacientes')}
           className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-emerald-700 transition-colors"
         >
           <ArrowLeft className="w-4 h-4 mr-1.5" />
-          Voltar
+          Voltar para Pacientes
         </button>
         <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold">
           Prontuário Ativo
         </span>
       </div>
 
-      {/* Cartão de Cabeçalho do Perfil */}
+      {/* Cartão de Cabeçalho Resumido do Perfil */}
       <Card className="border-emerald-100/80 overflow-hidden bg-white shadow-sm">
-        <div className="h-24 bg-gradient-to-r from-emerald-600 to-teal-500" />
-        <div className="px-6 pb-6 pt-0 relative">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between -mt-10 mb-4 gap-4">
-            <div className="flex items-end gap-4">
-              <div className="w-20 h-20 rounded-2xl bg-white p-1 shadow-md border border-slate-100 flex-shrink-0">
-                <div className="w-full h-full rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-extrabold text-2xl">
+        <div className="h-20 bg-gradient-to-r from-emerald-600 to-teal-500" />
+        <div className="px-6 pb-5 pt-0 relative">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between -mt-8 mb-4 gap-4">
+            <div className="flex items-end gap-3.5">
+              <div className="w-16 h-16 rounded-2xl bg-white p-1 shadow-md border border-slate-100 flex-shrink-0">
+                <div className="w-full h-full rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-extrabold text-xl">
                   {paciente.nome?.charAt(0).toUpperCase() || 'P'}
                 </div>
               </div>
               <div>
-                <h1 className="text-2xl font-extrabold text-slate-900">{paciente.nome}</h1>
+                <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900">{paciente.nome}</h1>
                 <p className="text-xs text-slate-500">
                   Cadastrado em {new Date(paciente.created_at).toLocaleDateString('pt-BR')}
                 </p>
@@ -106,16 +159,16 @@ export const PacientePerfil: React.FC = () => {
                   href={`https://wa.me/${paciente.whatsapp.replace(/\D/g, '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center px-3.5 py-2 rounded-xl text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm transition-colors"
+                  className="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm transition-colors"
                 >
                   <Phone className="w-3.5 h-3.5 mr-1.5" />
-                  Enviar WhatsApp
+                  WhatsApp
                 </a>
               )}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 pt-4 border-t border-slate-100 text-xs text-slate-600">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 pt-3 border-t border-slate-100 text-xs text-slate-600">
             <div className="flex items-center gap-2">
               <Mail className="w-4 h-4 text-emerald-600 flex-shrink-0" />
               <span className="truncate">{paciente.email || 'Email não informado'}</span>
@@ -136,70 +189,81 @@ export const PacientePerfil: React.FC = () => {
         </div>
       </Card>
 
-      {/* Detalhes Clínicos */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="border-slate-200/80">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base font-semibold flex items-center gap-2 text-slate-800">
-              <Activity className="w-5 h-5 text-emerald-600" />
-              Objetivos & Hábitos
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm text-slate-600">
-            <div>
-              <span className="font-semibold text-slate-800 block text-xs uppercase tracking-wider text-slate-400 mb-1">
-                Objetivo Principal
-              </span>
-              <p>{paciente.objetivo_texto || 'Não especificado'}</p>
-            </div>
-            <div>
-              <span className="font-semibold text-slate-800 block text-xs uppercase tracking-wider text-slate-400 mb-1">
-                Nível de Atividade Física
-              </span>
-              <p>{paciente.nivel_atividade || 'Não informado'}</p>
-            </div>
-            <div>
-              <span className="font-semibold text-slate-800 block text-xs uppercase tracking-wider text-slate-400 mb-1">
-                Ingestão de Água Diária
-              </span>
-              <p>{paciente.litros_agua ? `${paciente.litros_agua} litros/dia` : 'Não informado'}</p>
-            </div>
-          </CardContent>
-        </Card>
+      {/* SELETOR DE SEÇÕES PRINCIPAIS (PROMPT 5: DADOS, CONSULTAS, PLANOS) */}
+      <div className="flex border-b border-slate-200 bg-white rounded-2xl p-1.5 shadow-xs gap-2">
+        <button
+          onClick={() => setActiveMainSection('dados')}
+          className={`flex-1 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all ${
+            activeMainSection === 'dados'
+              ? 'bg-emerald-600 text-white shadow-sm'
+              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+          }`}
+        >
+          <UserCheck className="w-4 h-4" />
+          <span>Seção 1: Dados do Paciente</span>
+        </button>
 
-        <Card className="border-slate-200/80">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base font-semibold flex items-center gap-2 text-slate-800">
-              <HeartPulse className="w-5 h-5 text-emerald-600" />
-              Restrições & Saúde
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm text-slate-600">
-            <div>
-              <span className="font-semibold text-slate-800 block text-xs uppercase tracking-wider text-slate-400 mb-1">
-                Alergias / Restrições
-              </span>
-              <p>
-                {Array.isArray(paciente.alergias) && paciente.alergias.length > 0
-                  ? paciente.alergias.join(', ')
-                  : 'Nenhuma alergia registrada'}
-              </p>
-            </div>
-            <div>
-              <span className="font-semibold text-slate-800 block text-xs uppercase tracking-wider text-slate-400 mb-1">
-                Medicamentos em Uso
-              </span>
-              <p>{paciente.medicamentos || 'Nenhum'}</p>
-            </div>
-            <div>
-              <span className="font-semibold text-slate-800 block text-xs uppercase tracking-wider text-slate-400 mb-1">
-                Suplementação Atual
-              </span>
-              <p>{paciente.suplementos || 'Nenhuma'}</p>
-            </div>
-          </CardContent>
-        </Card>
+        <button
+          onClick={() => setActiveMainSection('consultas')}
+          className={`flex-1 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all ${
+            activeMainSection === 'consultas'
+              ? 'bg-emerald-600 text-white shadow-sm'
+              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+          }`}
+        >
+          <Calendar className="w-4 h-4" />
+          <span>Seção 2: Consultas & Evolução</span>
+        </button>
+
+        <button
+          onClick={() => setActiveMainSection('planos')}
+          className={`flex-1 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all ${
+            activeMainSection === 'planos'
+              ? 'bg-emerald-600 text-white shadow-sm'
+              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+          }`}
+        >
+          <Utensils className="w-4 h-4" />
+          <span>Seção 3: Planos Alimentares</span>
+        </button>
       </div>
+
+      {/* SEÇÃO 1: DADOS DO PACIENTE (EDITÁVEL NAS 3 ABAS) */}
+      {activeMainSection === 'dados' && (
+        <div className="space-y-4 animate-fadeIn">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-slate-800">Edição de Anamnese e Dados</h2>
+            <span className="text-xs text-slate-400">Edite os campos e clique em Salvar Alterações</span>
+          </div>
+          <PacienteDadosEditSection
+            key={paciente.id + (paciente.updated_at || '')}
+            paciente={paciente}
+            onSalvar={handleSalvarDadosPaciente}
+          />
+        </div>
+      )}
+
+      {/* SEÇÃO 2: CONSULTAS & EVOLUÇÃO DE PESO */}
+      {activeMainSection === 'consultas' && (
+        <div className="animate-fadeIn">
+          <ConsultasSection
+            pacienteId={paciente.id}
+            pesoInicial={paciente.peso_inicial}
+            consultas={consultas}
+            isLoading={isLoadingConsultas}
+            onSalvarNovaConsulta={handleSalvarNovaConsulta}
+          />
+        </div>
+      )}
+
+      {/* SEÇÃO 3: PLANOS ALIMENTARES */}
+      {activeMainSection === 'planos' && (
+        <div className="animate-fadeIn">
+          <PlanoAlimentarSection paciente={paciente} />
+        </div>
+      )}
     </div>
   );
 };
+
+

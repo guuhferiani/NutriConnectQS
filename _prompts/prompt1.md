@@ -16,7 +16,6 @@ Crie as seguintes tabelas com todos os campos abaixo:
 - nome (text, not null)
 - data_nascimento (date)
 - sexo (text)
-- telefone (text)
 - whatsapp (text)
 - email (text)
 - peso_inicial (numeric)
