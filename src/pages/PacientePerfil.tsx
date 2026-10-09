@@ -136,30 +136,32 @@ export const PacientePerfil: React.FC = () => {
 
       {/* Cartão de Cabeçalho Resumido do Perfil */}
       <Card className="border-emerald-100/80 overflow-hidden bg-white shadow-sm">
-        <div className="h-20 bg-gradient-to-r from-emerald-600 to-teal-500" />
-        <div className="px-6 pb-5 pt-0 relative">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between -mt-8 mb-4 gap-4">
-            <div className="flex items-end gap-3.5">
-              <div className="w-16 h-16 rounded-2xl bg-white p-1 shadow-md border border-slate-100 flex-shrink-0">
+        <div className="h-16 sm:h-20 bg-gradient-to-r from-emerald-600 to-teal-500" />
+        <div className="px-4 sm:px-6 pb-4 sm:pb-5 pt-0 relative">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between -mt-7 sm:-mt-8 mb-3 sm:mb-4 gap-3 sm:gap-4">
+            <div className="flex items-center sm:items-end gap-3 sm:gap-3.5 min-w-0">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white p-1 shadow-md border border-slate-100 flex-shrink-0">
                 <div className="w-full h-full rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-extrabold text-xl">
                   {paciente.nome?.charAt(0).toUpperCase() || 'P'}
                 </div>
               </div>
-              <div>
-                <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900">{paciente.nome}</h1>
-                <p className="text-xs text-slate-500">
+              <div className="min-w-0">
+                <h1 className="text-lg sm:text-2xl font-extrabold text-slate-900 leading-tight truncate">
+                  {paciente.nome}
+                </h1>
+                <p className="text-xs text-slate-500 truncate">
                   Cadastrado em {new Date(paciente.created_at).toLocaleDateString('pt-BR')}
                 </p>
               </div>
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex gap-2 w-full sm:w-auto">
               {paciente.whatsapp && (
                 <a
                   href={`https://wa.me/${paciente.whatsapp.replace(/\D/g, '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm transition-colors"
+                  className="w-full sm:w-auto justify-center inline-flex items-center px-3.5 py-2 sm:py-1.5 rounded-xl text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm transition-colors"
                 >
                   <Phone className="w-3.5 h-3.5 mr-1.5" />
                   WhatsApp
@@ -168,71 +170,74 @@ export const PacientePerfil: React.FC = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 pt-3 border-t border-slate-100 text-xs text-slate-600">
-            <div className="flex items-center gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 pt-3 border-t border-slate-100 text-xs text-slate-600">
+            <div className="flex items-center gap-2 min-w-0">
               <Mail className="w-4 h-4 text-emerald-600 flex-shrink-0" />
               <span className="truncate">{paciente.email || 'Email não informado'}</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 min-w-0">
               <Phone className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-              <span>{paciente.whatsapp || paciente.telefone || 'Sem telefone'}</span>
+              <span className="truncate">{paciente.whatsapp || paciente.telefone || 'Sem telefone'}</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 min-w-0">
               <Weight className="w-4 h-4 text-teal-600 flex-shrink-0" />
-              <span>Peso inicial: {paciente.peso_inicial ? `${paciente.peso_inicial} kg` : '—'}</span>
+              <span className="truncate">Peso: {paciente.peso_inicial ? `${paciente.peso_inicial} kg` : '—'}</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 min-w-0">
               <Ruler className="w-4 h-4 text-teal-600 flex-shrink-0" />
-              <span>Altura: {paciente.altura ? `${paciente.altura} cm` : '—'}</span>
+              <span className="truncate">Altura: {paciente.altura ? `${paciente.altura} cm` : '—'}</span>
             </div>
           </div>
         </div>
       </Card>
 
       {/* SELETOR DE SEÇÕES PRINCIPAIS (PROMPT 5: DADOS, CONSULTAS, PLANOS) */}
-      <div className="flex border-b border-slate-200 bg-white rounded-2xl p-1.5 shadow-xs gap-2">
+      <div className="grid grid-cols-3 bg-white border border-slate-200/90 rounded-2xl p-1 sm:p-1.5 shadow-xs gap-1 sm:gap-2">
         <button
           onClick={() => setActiveMainSection('dados')}
-          className={`flex-1 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all ${
+          className={`py-2 sm:py-2.5 px-1.5 sm:px-4 rounded-xl text-xs sm:text-sm font-bold flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 transition-all text-center min-w-0 ${
             activeMainSection === 'dados'
               ? 'bg-emerald-600 text-white shadow-sm'
               : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
           }`}
         >
-          <UserCheck className="w-4 h-4" />
-          <span>Seção 1: Dados do Paciente</span>
+          <UserCheck className="w-4 h-4 flex-shrink-0" />
+          <span className="sm:hidden text-[11px] font-bold">1. Dados</span>
+          <span className="hidden sm:inline">Seção 1: Dados do Paciente</span>
         </button>
 
         <button
           onClick={() => setActiveMainSection('consultas')}
-          className={`flex-1 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all ${
+          className={`py-2 sm:py-2.5 px-1.5 sm:px-4 rounded-xl text-xs sm:text-sm font-bold flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 transition-all text-center min-w-0 ${
             activeMainSection === 'consultas'
               ? 'bg-emerald-600 text-white shadow-sm'
               : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
           }`}
         >
-          <Calendar className="w-4 h-4" />
-          <span>Seção 2: Consultas & Evolução</span>
+          <Calendar className="w-4 h-4 flex-shrink-0" />
+          <span className="sm:hidden text-[11px] font-bold">2. Consultas</span>
+          <span className="hidden sm:inline">Seção 2: Consultas & Evolução</span>
         </button>
 
         <button
           onClick={() => setActiveMainSection('planos')}
-          className={`flex-1 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all ${
+          className={`py-2 sm:py-2.5 px-1.5 sm:px-4 rounded-xl text-xs sm:text-sm font-bold flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 transition-all text-center min-w-0 ${
             activeMainSection === 'planos'
               ? 'bg-emerald-600 text-white shadow-sm'
               : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
           }`}
         >
-          <Utensils className="w-4 h-4" />
-          <span>Seção 3: Planos Alimentares</span>
+          <Utensils className="w-4 h-4 flex-shrink-0" />
+          <span className="sm:hidden text-[11px] font-bold">3. Planos</span>
+          <span className="hidden sm:inline">Seção 3: Planos Alimentares</span>
         </button>
       </div>
 
       {/* SEÇÃO 1: DADOS DO PACIENTE (EDITÁVEL NAS 3 ABAS) */}
       {activeMainSection === 'dados' && (
         <div className="space-y-4 animate-fadeIn">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-slate-800">Edição de Anamnese e Dados</h2>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2">
+            <h2 className="text-base sm:text-lg font-bold text-slate-800">Edição de Anamnese e Dados</h2>
             <span className="text-xs text-slate-400">Edite os campos e clique em Salvar Alterações</span>
           </div>
           <PacienteDadosEditSection

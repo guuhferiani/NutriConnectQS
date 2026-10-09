@@ -152,11 +152,11 @@ export const ConsultasSection: React.FC<ConsultasSectionProps> = ({
   return (
     <div className="space-y-6">
       {/* CABEÇALHO DA SEÇÃO DE CONSULTAS */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-emerald-600" />
-            Acompanhamento de Consultas & Evolução
+          <h2 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2">
+            <Calendar className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+            <span>Consultas & Evolução</span>
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
             Histórico completo de atendimentos antropométricos e métricas corporais
@@ -165,7 +165,7 @@ export const ConsultasSection: React.FC<ConsultasSectionProps> = ({
 
         <Button
           onClick={handleOpenModal}
-          className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm text-xs font-semibold"
+          className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm text-xs font-semibold"
         >
           <Plus className="w-4 h-4 mr-1.5" />
           Nova Consulta

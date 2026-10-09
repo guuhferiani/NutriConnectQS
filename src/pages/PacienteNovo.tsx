@@ -296,50 +296,50 @@ export const PacienteNovo: React.FC = () => {
       )}
 
       {/* Abas de Navegação */}
-      <div className="flex border-b border-slate-200 bg-white rounded-xl p-1 shadow-xs gap-1">
+      <div className="grid grid-cols-3 bg-white border border-slate-200/90 rounded-xl p-1 shadow-xs gap-1">
         <button
           type="button"
           onClick={() => setActiveTab('pessoal')}
-          className={`flex-1 py-2.5 px-4 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all ${
+          className={`py-2 px-1 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1 sm:gap-2 transition-all min-w-0 ${
             activeTab === 'pessoal'
               ? 'bg-emerald-600 text-white shadow-sm'
               : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
           }`}
         >
-          <User className="w-4 h-4" />
-          <span>1. Pessoal</span>
+          <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+          <span className="truncate">1. Pessoal</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab('clinico')}
-          className={`flex-1 py-2.5 px-4 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all ${
+          className={`py-2 px-1 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1 sm:gap-2 transition-all min-w-0 ${
             activeTab === 'clinico'
               ? 'bg-emerald-600 text-white shadow-sm'
               : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
           }`}
         >
-          <Activity className="w-4 h-4" />
-          <span>2. Clínico</span>
+          <Activity className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+          <span className="truncate">2. Clínico</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab('habitos')}
-          className={`flex-1 py-2.5 px-4 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all ${
+          className={`py-2 px-1 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center gap-1 sm:gap-2 transition-all min-w-0 ${
             activeTab === 'habitos'
               ? 'bg-emerald-600 text-white shadow-sm'
               : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
           }`}
         >
-          <Coffee className="w-4 h-4" />
-          <span>3. Hábitos</span>
+          <Coffee className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
+          <span className="truncate">3. Hábitos</span>
         </button>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card className="border-slate-200 bg-white shadow-sm overflow-hidden">
-          <CardContent className="p-6 sm:p-8">
+          <CardContent className="p-4 sm:p-8">
             {/* ABA 1: PESSOAL */}
             {activeTab === 'pessoal' && (
               <div className="space-y-5">
@@ -908,12 +908,13 @@ export const PacienteNovo: React.FC = () => {
         </Card>
 
         {/* Barra de Ações Inferior */}
-        <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-3 pt-2">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
             {activeTab !== 'pessoal' && (
               <Button
                 type="button"
                 variant="outline"
+                className="flex-1 sm:flex-initial"
                 onClick={() => {
                   if (activeTab === 'habitos') setActiveTab('clinico');
                   else if (activeTab === 'clinico') setActiveTab('pessoal');
@@ -927,7 +928,7 @@ export const PacienteNovo: React.FC = () => {
               <Button
                 type="button"
                 variant="outline"
-                className="bg-slate-50"
+                className="flex-1 sm:flex-initial bg-slate-50"
                 onClick={() => {
                   if (activeTab === 'pessoal') setActiveTab('clinico');
                   else if (activeTab === 'clinico') setActiveTab('habitos');
@@ -938,12 +939,13 @@ export const PacienteNovo: React.FC = () => {
             )}
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
             <Button
               type="button"
               variant="outline"
               onClick={() => navigate('/pacientes')}
               disabled={isSubmitting}
+              className="w-full sm:w-auto"
             >
               Cancelar
             </Button>
@@ -951,7 +953,7 @@ export const PacienteNovo: React.FC = () => {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-md font-semibold px-6"
+              className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white shadow-md font-semibold px-6"
             >
               <Save className="w-4 h-4 mr-2" />
               {isSubmitting ? 'Cadastrando Paciente...' : 'Salvar e Ver Prontuário'}

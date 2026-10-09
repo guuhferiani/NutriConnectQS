@@ -1,0 +1,68 @@
+{
+  "id": "/?source=pwa",
+  "name": "NutriConnect — Gestão Inteligente para Nutricionistas",
+  "short_name": "NutriConnect",
+  "description": "Plataforma moderna de gestão de pacientes, anamnese, consultas e planos alimentares inteligentes com IA.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#f8fafc",
+  "theme_color": "#059669",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "categories": ["medical", "health", "productivity", "lifestyle"],
+  "icons": [
+    {
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/pwa-512x512.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Novo Paciente",
+      "short_name": "Cadastrar",
+      "description": "Cadastrar um novo paciente no consultório",
+      "url": "/pacientes/novo",
+      "icons": [
+        {
+          "src": "/pwa-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Meus Pacientes",
+      "short_name": "Pacientes",
+      "description": "Ver a lista de pacientes cadastrados",
+      "url": "/pacientes",
+      "icons": [
+        {
+          "src": "/pwa-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

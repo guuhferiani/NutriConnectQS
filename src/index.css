@@ -31,3 +31,13 @@
     radial-gradient(at 100% 0%, hsla(160, 60%, 90%, 1) 0, transparent 50%),
     radial-gradient(at 50% 100%, hsla(142, 60%, 96%, 1) 0, transparent 50%);
 }
+
+/* Utilitário para ocultar barra de rolagem em abas mobile */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+

@@ -3,6 +3,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { PublicRoute } from '@/components/PublicRoute';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { PWAInstallPrompt } from '@/components/PWAInstallPrompt';
 import { Login } from '@/pages/Login';
 import { Register } from '@/pages/Register';
 import { Dashboard } from '@/pages/Dashboard';
@@ -37,6 +38,9 @@ export function App() {
           {/* Redirecionamento para qualquer outra rota inexistente */}
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
+
+        {/* Prompt de Instalação do PWA */}
+        <PWAInstallPrompt />
       </AuthProvider>
     </BrowserRouter>
   );

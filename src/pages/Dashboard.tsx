@@ -12,7 +12,6 @@ import {
   RefreshCw,
   ChevronRight,
   ArrowUpRight,
-  Database,
   CalendarX,
   Phone,
 } from 'lucide-react';
@@ -71,11 +70,6 @@ export const Dashboard: React.FC = () => {
               Atualizado às {lastUpdated.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
             </span>
           )}
-          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/80">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <Database className="w-3.5 h-3.5 mr-0.5" />
-            Neon conectado
-          </div>
 
           <Button
             variant="outline"
@@ -93,14 +87,14 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {/* Grid com Cards 1 e 2 (Métricas Principais) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Card 1 — Total de pacientes ativos */}
         <Card className="border-slate-200/90 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 bg-white relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-bl-full pointer-events-none transition-transform group-hover:scale-110" />
-          <CardHeader className="pb-2">
+          <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-emerald-50/80 rounded-bl-full pointer-events-none transition-transform group-hover:scale-110" />
+          <CardHeader className="p-4 sm:p-6 pb-2">
             <div className="flex items-center justify-between">
-              <div className="p-3 rounded-2xl bg-emerald-100/80 text-emerald-700">
-                <Users className="w-6 h-6" />
+              <div className="p-2.5 sm:p-3 rounded-2xl bg-emerald-100/80 text-emerald-700">
+                <Users className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
               <Link
                 to="/pacientes"
@@ -110,19 +104,19 @@ export const Dashboard: React.FC = () => {
                 <ChevronRight className="w-3.5 h-3.5" />
               </Link>
             </div>
-            <CardTitle className="text-base font-semibold text-slate-700 mt-3">
+            <CardTitle className="text-sm sm:text-base font-semibold text-slate-700 mt-2 sm:mt-3 leading-snug">
               Total de Pacientes Ativos
             </CardTitle>
             <CardDescription className="text-xs text-slate-500">
               Pacientes cadastrados pela nutricionista logada
             </CardDescription>
           </CardHeader>
-          <CardContent className="pt-2">
+          <CardContent className="p-4 sm:p-6 pt-1 sm:pt-2">
             {isLoading ? (
               <div className="h-10 w-24 bg-slate-100 animate-pulse rounded-lg" />
             ) : (
-              <div className="flex items-baseline gap-2">
-                <span className="text-4xl font-extrabold text-slate-900 tracking-tight">
+              <div className="flex flex-wrap items-baseline gap-1.5 sm:gap-2">
+                <span className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
                   {metrics?.totalPacientes ?? 0}
                 </span>
                 <span className="text-xs font-medium text-slate-400">pacientes cadastrados</span>
@@ -133,29 +127,29 @@ export const Dashboard: React.FC = () => {
 
         {/* Card 2 — Consultas da semana */}
         <Card className="border-slate-200/90 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 bg-white relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-teal-50 rounded-bl-full pointer-events-none transition-transform group-hover:scale-110" />
-          <CardHeader className="pb-2">
+          <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-teal-50/80 rounded-bl-full pointer-events-none transition-transform group-hover:scale-110" />
+          <CardHeader className="p-4 sm:p-6 pb-2">
             <div className="flex items-center justify-between">
-              <div className="p-3 rounded-2xl bg-teal-100/80 text-teal-700">
-                <Calendar className="w-6 h-6" />
+              <div className="p-2.5 sm:p-3 rounded-2xl bg-teal-100/80 text-teal-700">
+                <Calendar className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
               <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-teal-50 text-teal-700 border border-teal-200">
                 Semana atual
               </span>
             </div>
-            <CardTitle className="text-base font-semibold text-slate-700 mt-3">
+            <CardTitle className="text-sm sm:text-base font-semibold text-slate-700 mt-2 sm:mt-3 leading-snug">
               Consultas da Semana
             </CardTitle>
             <CardDescription className="text-xs text-slate-500">
               Consultas registradas na semana corrente
             </CardDescription>
           </CardHeader>
-          <CardContent className="pt-2">
+          <CardContent className="p-4 sm:p-6 pt-1 sm:pt-2">
             {isLoading ? (
               <div className="h-10 w-24 bg-slate-100 animate-pulse rounded-lg" />
             ) : (
-              <div className="flex items-baseline gap-2">
-                <span className="text-4xl font-extrabold text-slate-900 tracking-tight">
+              <div className="flex flex-wrap items-baseline gap-1.5 sm:gap-2">
+                <span className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
                   {metrics?.consultasSemana ?? 0}
                 </span>
                 <span className="text-xs font-medium text-slate-400">atendimentos realizados</span>

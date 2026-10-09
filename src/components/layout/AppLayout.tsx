@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Logo } from '@/components/Logo';
@@ -9,6 +9,7 @@ import {
   Menu,
   X,
   User as UserIcon,
+  Download,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -16,6 +17,26 @@ export const AppLayout: React.FC = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [installPrompt, setInstallPrompt] = useState<any>(null);
+
+  useEffect(() => {
+    const handleBeforeInstall = (e: Event) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!installPrompt) return;
+    try {
+      await installPrompt.prompt();
+      setInstallPrompt(null);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const handleSignOut = async () => {
     await signOut();
@@ -123,6 +144,16 @@ export const AppLayout: React.FC = () => {
               <p className="text-[11px] text-slate-500 truncate">{user?.email}</p>
             </div>
           </div>
+
+          {installPrompt && (
+            <button
+              onClick={handleInstallClick}
+              className="w-full mb-2 flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 transition-colors border border-emerald-200 shadow-2xs"
+            >
+              <Download className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Instalar Aplicativo</span>
+            </button>
+          )}
 
           <button
             onClick={handleSignOut}

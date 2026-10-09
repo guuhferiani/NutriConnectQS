@@ -315,26 +315,26 @@ export const PlanoAlimentarSection: React.FC<PlanoAlimentarSectionProps> = ({ pa
     <div className="space-y-6">
       {/* CABEÇALHO DA SEÇÃO COM AÇÕES */}
       <Card className="border-emerald-100 shadow-sm bg-gradient-to-br from-white via-emerald-50/20 to-teal-50/30">
-        <CardContent className="p-6">
+        <CardContent className="p-4 sm:p-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <div className="p-2 rounded-xl bg-emerald-600 text-white shadow-sm">
+                <div className="p-2 rounded-xl bg-emerald-600 text-white shadow-sm flex-shrink-0">
                   <Utensils className="w-5 h-5" />
                 </div>
-                <h2 className="text-xl font-bold text-slate-900">Plano Alimentar Semanal</h2>
+                <h2 className="text-lg sm:text-xl font-bold text-slate-900">Plano Alimentar Semanal</h2>
               </div>
               <p className="text-xs text-slate-500">
                 Gere cardápios personalizados com IA levando em consideração metas, alergias e preferências do paciente.
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2.5">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2.5 w-full md:w-auto">
               <Button
                 onClick={handleCriarManual}
                 variant="outline"
                 size="sm"
-                className="text-xs border-slate-300 hover:bg-slate-50 text-slate-700"
+                className="w-full sm:w-auto text-xs border-slate-300 hover:bg-slate-50 text-slate-700 justify-center"
                 disabled={isGeneratingIA || isSaving}
               >
                 <Plus className="w-3.5 h-3.5 mr-1" />
@@ -344,7 +344,7 @@ export const PlanoAlimentarSection: React.FC<PlanoAlimentarSectionProps> = ({ pa
               <Button
                 onClick={handleGerarPlanoIA}
                 disabled={isGeneratingIA || isSaving}
-                className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 text-white shadow-md hover:shadow-lg transition-all text-xs font-semibold px-4 py-2"
+                className="w-full sm:w-auto justify-center bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 text-white shadow-md hover:shadow-lg transition-all text-xs font-semibold px-4 py-2"
               >
                 {isGeneratingIA ? (
                   <>
@@ -442,14 +442,14 @@ export const PlanoAlimentarSection: React.FC<PlanoAlimentarSectionProps> = ({ pa
               </div>
 
               {/* TABS DOS DIAS DA SEMANA */}
-              <div className="flex border-b border-slate-200 overflow-x-auto bg-slate-100/60 p-1.5 gap-1.5 scrollbar-thin">
+              <div className="flex border-b border-slate-200 overflow-x-auto no-scrollbar bg-slate-100/60 p-1.5 gap-1.5">
                 {planoAtual.plano_semanal.map((diaObj, idx) => {
                   const isActive = activeDiaIndex === idx;
                   return (
                     <button
                       key={diaObj.dia || idx}
                       onClick={() => setActiveDiaIndex(idx)}
-                      className={`px-3 py-2 text-xs font-semibold rounded-lg whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                      className={`px-3 py-2 text-xs font-semibold rounded-lg whitespace-nowrap transition-all flex items-center gap-1.5 flex-shrink-0 ${
                         isActive
                           ? 'bg-white text-emerald-800 shadow-sm border border-slate-200/80'
                           : 'text-slate-600 hover:bg-white/60 hover:text-slate-900'
@@ -463,11 +463,11 @@ export const PlanoAlimentarSection: React.FC<PlanoAlimentarSectionProps> = ({ pa
               </div>
 
               {/* CONTEÚDO DO DIA ATIVO (5 REFEIÇÕES X 5 INPUTS) */}
-              <div className="p-5 space-y-6">
+              <div className="p-4 sm:p-5 space-y-6">
                 {activeDia ? (
                   <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2">
+                      <h3 className="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
                         <span>Cardápio para:</span>
                         <span className="text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-100">
                           {activeDia.dia}

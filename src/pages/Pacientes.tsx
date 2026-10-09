@@ -58,19 +58,19 @@ export const Pacientes: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <Button
             variant="outline"
             size="sm"
             onClick={loadPacientes}
             disabled={isLoading}
-            className="text-slate-600 hover:text-emerald-700 hover:bg-emerald-50"
+            className="flex-1 sm:flex-initial text-slate-600 hover:text-emerald-700 hover:bg-emerald-50"
           >
             <RefreshCw className={`w-4 h-4 mr-1.5 ${isLoading ? 'animate-spin' : ''}`} />
             Atualizar
           </Button>
-          <Link to="/pacientes/novo">
-            <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm">
+          <Link to="/pacientes/novo" className="flex-1 sm:flex-initial">
+            <Button size="sm" className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm">
               <Plus className="w-4 h-4 mr-1.5" />
               Novo Paciente
             </Button>
@@ -96,7 +96,7 @@ export const Pacientes: React.FC = () => {
           <div className="inline-flex p-3 rounded-full bg-emerald-50 text-emerald-600 mb-3 animate-pulse">
             <RefreshCw className="w-6 h-6 animate-spin" />
           </div>
-          <p className="text-sm text-slate-500">Carregando pacientes do Neon...</p>
+          <p className="text-sm text-slate-500">Carregando pacientes...</p>
         </Card>
       ) : filteredPacientes.length === 0 ? (
         <Card className="p-12 text-center border-dashed border-slate-300 bg-white">
